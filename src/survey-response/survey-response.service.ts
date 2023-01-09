@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginateResponse } from 'src/helpers';
 import { SurveyQuestionService } from 'src/survey-question/survey-question.service';
+import { IFindQuery } from 'src/types';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateSurveyResponseDto } from './dto/create-survey-response.dto';
@@ -49,21 +51,34 @@ export class SurveyResponseService {
     };
   }
 
-  async findByQuestion(questionCod: string) {
+  async findByQuestion(questionCod: string, query: IFindQuery) {
+    const take = +query.take || 10;
+    const page = +query.page || 1;
+    const skip = (page - 1) * take;
+
     const { question } = await this.surveyQuestionService.findOne(questionCod);
-    const responses = await this.surveyResponsesRepository.find({
+
+    const responses = await this.surveyResponsesRepository.findAndCount({
       where: { question },
+      take: take,
+      skip: skip,
     });
 
-    return { responses };
+    return paginateResponse(responses, page, take);
   }
 
-  async findBySurvey(surveyCod: string) {
-    const responses = await this.surveyResponsesRepository.find({
+  async findBySurvey(surveyCod: string, query: IFindQuery) {
+    const take = +query.take || 10;
+    const page = +query.page || 1;
+    const skip = (page - 1) * take;
+
+    const responses = await this.surveyResponsesRepository.findAndCount({
       where: { surveyCod },
+      take: take,
+      skip: skip,
     });
 
-    return { responses };
+    return paginateResponse(responses, page, take);
   }
 
   async update(cod: string, updateSurveyResponseDto: UpdateSurveyResponseDto) {

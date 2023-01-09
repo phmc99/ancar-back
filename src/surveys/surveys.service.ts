@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginateResponse } from 'src/helpers';
 import { SurveyQuestionService } from 'src/survey-question/survey-question.service';
+import { IFindQuery } from 'src/types';
 import { Repository } from 'typeorm';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
@@ -44,9 +46,18 @@ export class SurveysService {
     };
   }
 
-  async findAll() {
-    const surveys = await this.surveysRepository.find();
-    return { surveys };
+  async findAll(query: IFindQuery) {
+    const take = +query.take || 10;
+    const page = +query.page || 1;
+    const skip = (page - 1) * take;
+
+    const surveys = await this.surveysRepository.findAndCount({
+      order: { createdAt: 'DESC' },
+      take: take,
+      skip: skip,
+    });
+
+    return paginateResponse(surveys, page, take);
   }
 
   async findOne(cod: string) {

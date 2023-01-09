@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SurveysService } from './surveys.service';
 import { CreateSurveyDto } from './dto/create-survey.dto';
@@ -29,8 +30,8 @@ export class SurveysController {
   }
 
   @Get()
-  findAll() {
-    return this.surveysService.findAll();
+  findAll(@Query('page') page: string, @Query('take') take: string) {
+    return this.surveysService.findAll({ page, take });
   }
 
   @Get(':cod')
@@ -65,13 +66,24 @@ export class SurveysController {
   }
 
   @Get(':surveyCod/responses')
-  findAllBySurvey(@Param('surveyCod') surveyCod: string) {
-    return this.surveyResponseService.findBySurvey(surveyCod);
+  findAllBySurvey(
+    @Param('surveyCod') surveyCod: string,
+    @Query('page') page: string,
+    @Query('take') take: string,
+  ) {
+    return this.surveyResponseService.findBySurvey(surveyCod, { page, take });
   }
 
   @Get('/questions/:questionCod/responses')
-  findAllResponsesByQuestion(@Param('questionCod') questionCod: string) {
-    return this.surveyResponseService.findByQuestion(questionCod);
+  findAllResponsesByQuestion(
+    @Param('questionCod') questionCod: string,
+    @Query('page') page: string,
+    @Query('take') take: string,
+  ) {
+    return this.surveyResponseService.findByQuestion(questionCod, {
+      page,
+      take,
+    });
   }
 
   @Patch(':surveyCod/responses/:responseCod')

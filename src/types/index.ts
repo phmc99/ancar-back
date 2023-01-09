@@ -31,3 +31,8 @@ export interface ISurveyQuestion {
   survey: ISurvey;
   responses: ISurveyResponse[];
 }
+
+export interface IFindQuery {
+  take: string;
+  page: string;
+}

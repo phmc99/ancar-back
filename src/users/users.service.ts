@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginateResponse } from 'src/helpers';
+import { IFindQuery } from 'src/types';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,9 +20,18 @@ export class UsersService {
     return { user };
   }
 
-  async findAll() {
-    const users = await this.usersRepository.find();
-    return { users };
+  async findAll(query: IFindQuery) {
+    const take = +query.take || 10;
+    const page = +query.page || 1;
+    const skip = (page - 1) * take;
+
+    const users = await this.usersRepository.findAndCount({
+      order: { name: 'DESC' },
+      take: take,
+      skip: skip,
+    });
+
+    return paginateResponse(users, page, take);
   }
 
   async findOne(cod: string) {
