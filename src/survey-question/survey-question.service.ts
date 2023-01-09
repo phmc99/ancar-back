@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateSurveyQuestionDto } from './dto/create-survey-question.dto';
 import { UpdateSurveyQuestionDto } from './dto/update-survey-question.dto';
+import SurveyQuestion from './entities/survey-question.entity';
 
 @Injectable()
 export class SurveyQuestionService {
-  create(createSurveyQuestionDto: CreateSurveyQuestionDto) {
-    return 'This action adds a new surveyQuestion';
+  constructor(
+    @InjectRepository(SurveyQuestion)
+    private surveyQuestionsRepository: Repository<SurveyQuestion>,
+  ) {}
+
+  async create(createSurveyQuestionDto: CreateSurveyQuestionDto[]) {
+    const surveyQuestions = this.surveyQuestionsRepository.create(
+      createSurveyQuestionDto,
+    );
+    await this.surveyQuestionsRepository.save(surveyQuestions);
+    return surveyQuestions;
   }
 
-  findAll() {
-    return `This action returns all surveyQuestion`;
+  async findOne(cod: string) {
+    const question = await this.surveyQuestionsRepository.findOneBy({ cod });
+    return { question };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} surveyQuestion`;
-  }
-
-  update(id: number, updateSurveyQuestionDto: UpdateSurveyQuestionDto) {
-    return `This action updates a #${id} surveyQuestion`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} surveyQuestion`;
+  async update(updateSurveyQuestionDto: UpdateSurveyQuestionDto[]) {
+    const updatedSurveyQuestion = await this.surveyQuestionsRepository.save(
+      updateSurveyQuestionDto,
+    );
+    return updatedSurveyQuestion;
   }
 }

@@ -20,6 +20,7 @@ export interface ISurveyResponse {
   description: string;
   question: ISurveyQuestion;
   user: IUser;
+  surveyCod: string;
   createdAt: Date;
   updatedAt: Date;
 }

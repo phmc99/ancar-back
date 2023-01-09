@@ -1,9 +1,10 @@
 import { IsString, IsNotEmpty } from 'class-validator';
+import Survey from 'src/surveys/entities/survey.entity';
 
 export class CreateSurveyQuestionDto {
   @IsString()
   @IsNotEmpty()
-  public surveyCod: string;
+  public survey: Survey;
 
   @IsString()
   @IsNotEmpty()

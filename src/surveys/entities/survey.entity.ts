@@ -19,7 +19,9 @@ export default class Survey {
   @Column()
   description: string;
 
-  @OneToMany(() => SurveyQuestion, (question) => question.survey)
+  @OneToMany(() => SurveyQuestion, (question) => question.survey, {
+    eager: true,
+  })
   questions: SurveyQuestion[];
 
   @CreateDateColumn()

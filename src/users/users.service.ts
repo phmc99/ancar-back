@@ -12,25 +12,33 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    const users = this.usersRepository.find();
-    return { users };
-  }
-
-  findOne(cod: string) {
-    const user = this.usersRepository.findOneBy({ cod });
+  async create(createUserDto: CreateUserDto) {
+    const user = this.usersRepository.create(createUserDto);
+    await this.usersRepository.save(user);
     return { user };
   }
 
-  update(cod: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${cod} user`;
+  async findAll() {
+    const users = await this.usersRepository.find();
+    return { users };
+  }
+
+  async findOne(cod: string) {
+    const user = await this.usersRepository.findOneBy({ cod });
+    return { user };
+  }
+
+  async update(cod: string, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOneBy({ cod });
+    const updatedUser = await this.usersRepository.save({
+      ...user,
+      ...updateUserDto,
+    });
+    return { updatedUser };
   }
 
   async remove(cod: string) {
     await this.usersRepository.delete(cod);
+    return { message: `user ${cod} deleted` };
   }
 }

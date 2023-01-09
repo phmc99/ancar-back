@@ -7,5 +7,9 @@ export class CreateSurveyResponseDto {
 
   @IsString()
   @IsNotEmpty()
+  public questionCod: string;
+
+  @IsString()
+  @IsNotEmpty()
   public description: string;
 }

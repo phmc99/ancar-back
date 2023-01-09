@@ -17,6 +17,9 @@ export default class SurveyResponse {
   @Column()
   description: string;
 
+  @Column()
+  surveyCod: string;
+
   @ManyToOne(() => SurveyQuestion, (question) => question.responses)
   question: SurveyQuestion;
 
