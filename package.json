@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "main": "dist/main.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
