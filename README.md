@@ -21,5 +21,5 @@ Descrição do desenvolvimento da API. Todos as informações, ajuestes e proble
 ## Documentação & Deploy
 
 - [Documentação da API](https://desafio-ancar.onrender.com/api)
-- URL - https://desafio-ancar.onrender.com/api
+- URL - https://desafio-ancar.onrender.com/
 
